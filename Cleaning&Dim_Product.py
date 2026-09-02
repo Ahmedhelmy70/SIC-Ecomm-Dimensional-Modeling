@@ -1,4 +1,7 @@
 
+# ## 1. Setup & Configuration
+# Spark session + MySQL JDBC connection settings
+
 # In[2]:
 
 
@@ -7,7 +10,7 @@ from pyspark.sql.window import Window
 
 
 # In[3]:
- 
+
 
 MYSQL_HOST = "localhost"
 MYSQL_PORT = "3306"
@@ -45,14 +48,16 @@ def read_table(table_name: str):
     return spark.read.jdbc(url=JDBC_URL, table=table_name, properties=JDBC_PROPERTIES)
 
 
-# In[10]:
+# ## 2. Ingestion — Reading Raw Tables from MySQL
+
+# In[11]:
 
 
 raw_customers = read_table("raw_customers")
 raw_customers.show(5)
 
 
-# In[27]:
+# In[35]:
 
 
 raw_products = read_table("raw_products")
@@ -70,6 +75,34 @@ for name, df in [
 ]:
     print(f"{name}: {df.count()}")
 
+
+# ## 3. Landing Raw Data on HDFS (Raw Zone)
+
+# In[37]:
+
+
+RAW_ZONE_PATH = "/raw_zone"
+
+raw_customers.write.mode("overwrite").parquet(f"{RAW_ZONE_PATH}/customers")
+raw_products.write.mode("overwrite").parquet(f"{RAW_ZONE_PATH}/products")
+raw_orders.write.mode("overwrite").parquet(f"{RAW_ZONE_PATH}/orders")
+raw_order_items.write.mode("overwrite").parquet(f"{RAW_ZONE_PATH}/order_items")
+raw_order_payments.write.mode("overwrite").parquet(f"{RAW_ZONE_PATH}/order_payments")
+
+
+# In[38]:
+
+
+raw_customers = spark.read.parquet(f"{RAW_ZONE_PATH}/customers")
+raw_products = spark.read.parquet(f"{RAW_ZONE_PATH}/products")
+raw_orders = spark.read.parquet(f"{RAW_ZONE_PATH}/orders")
+raw_order_items = spark.read.parquet(f"{RAW_ZONE_PATH}/order_items")
+raw_order_payments = spark.read.parquet(f"{RAW_ZONE_PATH}/order_payments")
+
+raw_customers.show(3)
+
+
+# ## 4. Data Cleaning & Validation
 
 # In[13]:
 
@@ -169,6 +202,8 @@ for name, df in [
     print(f"{name}: {df.count()}")
 
 
+# ## 5. Building Dim_Product (SCD Type 2)
+
 # In[19]:
 
 
@@ -256,7 +291,9 @@ print(f"Number of rows of Dim_Product: {dim_product.count()}")
 print(f"Number of unique products: {dim_product.select('product_id').distinct().count()}")
 
 
-# In[33]:
+# ## 6. Exporting Final Outputs
+
+# In[40]:
 
 
 customers_clean.write.mode("overwrite").parquet(
@@ -283,8 +320,8 @@ dim_product.write.mode("overwrite").parquet(
     "/user/student/cleaned_data/dim_product"
 )
 
-# In[34]:
+
+# In[41]:
 
 
 spark.read.parquet(f"/user/student/cleaned_data/customers_clean").show(5)
-
