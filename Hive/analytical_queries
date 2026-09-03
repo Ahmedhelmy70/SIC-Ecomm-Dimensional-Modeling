@@ -1,0 +1,64 @@
+USE dw;
+
+-- 1. Total Customers Count
+SELECT 
+    COUNT(DISTINCT customer_unique_id) AS total_customers
+FROM dw.dim_customer;
+
+-- 2. Total Orders Count
+SELECT 
+    COUNT(DISTINCT order_id) AS total_orders
+FROM dw.fact_sales;
+
+-- 3. Average Orders Per Customer
+SELECT 
+    ROUND(COUNT(DISTINCT order_id) / COUNT(DISTINCT customer_id), 2) AS avg_orders_per_customer
+FROM dw.fact_sales;
+
+-- 4. Top 5 States by Customers
+SELECT 
+    customer_state,
+    COUNT(DISTINCT customer_unique_id) AS total_customers
+FROM dw.dim_customer
+GROUP BY customer_state
+ORDER BY total_customers DESC
+LIMIT 5;
+
+-- 5. Orders Trend Over Time - Quarterly (Using dim_date)
+SELECT 
+    CONCAT(d.year, '-Q', d.quarter) AS quarter_year,
+    COUNT(DISTINCT f.order_id) AS total_orders
+FROM dw.fact_sales f
+JOIN dw.dim_date d ON f.order_purchase_date_key = d.date_key
+GROUP BY d.year, d.quarter
+ORDER BY quarter_year;
+
+-- 6. Top 5 Product Categories
+SELECT 
+    p.product_category_name,
+    COUNT(f.sales_key) AS total_products_sold
+FROM dw.fact_sales f
+JOIN dw.dim_product p ON f.product_id = p.product_id
+WHERE p.product_category_name IS NOT NULL
+GROUP BY p.product_category_name
+ORDER BY total_products_sold DESC
+LIMIT 5;
+
+-- 7. Busiest Purchase Hours (Extracted from full_date)
+SELECT 
+    HOUR(d.full_date) AS purchase_hour,
+    COUNT(DISTINCT f.order_id) AS total_orders
+FROM dw.fact_sales f
+JOIN dw.dim_date d ON f.order_purchase_date_key = d.date_key
+GROUP BY HOUR(d.full_date)
+ORDER BY total_orders DESC
+LIMIT 5;
+
+-- 8. Orders Status Breakdown
+SELECT 
+    order_status,
+    COUNT(DISTINCT order_id) AS total_orders
+FROM dw.fact_sales
+GROUP BY order_status
+ORDER BY total_orders DESC;
+ 
