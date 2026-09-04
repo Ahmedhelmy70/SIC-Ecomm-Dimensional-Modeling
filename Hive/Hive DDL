@@ -47,8 +47,8 @@ LOCATION '/user/student/dim_data/dim_date';
 CREATE EXTERNAL TABLE IF NOT EXISTS dw.fact_sales (
     sales_key               BIGINT,
     order_id                STRING,
-    customer_id             STRING,
-    product_id              STRING,
+    cust_key                INT,
+    product_key             BIGINT,
     order_purchase_date_key INT,
     order_status            STRING,
     price                   DOUBLE,
