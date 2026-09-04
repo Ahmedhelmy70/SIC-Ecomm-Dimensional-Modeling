@@ -14,20 +14,24 @@ CREATE EXTERNAL TABLE IF NOT EXISTS dw.dim_product (
     dw_end_date           DATE
 )
 STORED AS PARQUET
-LOCATION '/user/hive/warehouse/dw.db/dim_product';
+LOCATION '/user/student/dim_data/dim_product';
 
 CREATE EXTERNAL TABLE IF NOT EXISTS dw.dim_customer (
-    customer_key        BIGINT,
-    customer_id         STRING,
+    cust_key            INT,
     customer_unique_id  STRING,
-    customer_zip_code   STRING,
     customer_city       STRING,
     customer_state      STRING,
-    dw_start_date       DATE,
-    dw_end_date         DATE
+    recency             INT,
+    frequency           BIGINT,
+    monetary            DOUBLE,
+    recency_score       INT,
+    frequency_score     INT,
+    monetary_score      INT,
+    RFM_SCORE           STRING,
+    Segment             STRING
 )
 STORED AS PARQUET
-LOCATION '/user/hive/warehouse/dw.db/dim_customer';
+LOCATION '/user/student/dim_data/dim_customer';
 
 CREATE EXTERNAL TABLE IF NOT EXISTS dw.dim_date (
     date_key    INT,
