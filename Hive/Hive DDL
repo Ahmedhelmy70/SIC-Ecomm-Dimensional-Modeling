@@ -42,7 +42,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS dw.dim_date (
     day         INT
 )
 STORED AS PARQUET
-LOCATION '/user/hive/warehouse/dw.db/dim_date';
+LOCATION '/user/student/dim_data/dim_date';
 
 CREATE EXTERNAL TABLE IF NOT EXISTS dw.fact_sales (
     sales_key               BIGINT,
@@ -51,13 +51,14 @@ CREATE EXTERNAL TABLE IF NOT EXISTS dw.fact_sales (
     product_id              STRING,
     order_purchase_date_key INT,
     order_status            STRING,
-    price                   DECIMAL(10,2),
-    freight_value           DECIMAL(10,2),
-    payment_value           DECIMAL(10,2),
+    price                   DOUBLE,
+    freight_value           DOUBLE,
+    payment_value           DOUBLE,
     payment_type            STRING
 )
 PARTITIONED BY (order_year INT, order_month INT)
 STORED AS PARQUET
-LOCATION '/user/hive/warehouse/dw.db/fact_sales';
+LOCATION '/user/student/fact_data/fact_sales';
+MSCK REPAIR TABLE dw.fact_sales;
 
 SHOW TABLES IN dw;
