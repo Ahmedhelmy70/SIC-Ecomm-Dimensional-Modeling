@@ -1,6 +1,6 @@
 # SIC-Ecomm-Dimensional-Modeling
 
-This repository contains our graduation project for the Samsung Innovation Campus (Round 8) Big Data Track. Our team is implementing **Project 3.2: Customers and Products Dimensional Modeling** using the Brazilian E-Commerce Public Dataset by Olist.
+This repository contains project 1 for the Samsung Innovation Campus (Round 8) Big Data Track. Our team is implementing **Customers and Products Dimensional Modeling** using the Brazilian E-Commerce Public Dataset by Olist.
 
 ## Repository Structure
 ```text
@@ -12,6 +12,8 @@ SIC-Ecomm-Dimensional-Modeling/
 │   ├── Hive DDL
 │   ├── Image .jpeg
 │   └── analytical_queries
+├── ML/
+│   └── RandomForestML.ipynb
 ├── MySQL/
 │   ├── 01_create_source_tables.sql
 │   └── 02_bulk_insert.sql
