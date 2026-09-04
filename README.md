@@ -10,6 +10,8 @@ SIC-Ecomm-Dimensional-Modeling/
 ├── .gitignore
 ├── Docs/
 │   ├── Dashboard_doc.pdf
+|   ├── E-Commerce _Customer_&_Product_Modeling.pdf
+|   └── Presentation.pptx
 ├── Hive/
 │   ├── Hive DDL
 │   ├── Image .jpeg
